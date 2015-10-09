@@ -1,0 +1,67 @@
+enable-migrations
+add-migration Initial
+update-database
+
+Foreign Key needs name of navigation property "SchoolNav" and the name of the referenced entities' Primary Key "Id". FOreign key in DB named "SchoolNavId". 
+For more normal DB foreign key name use navigation property "School" and referenced entities' Primary Key "Id"
+
+    public class School
+    {
+        public School()
+        {
+            Teacher = new List<Teacher>();
+        }
+
+        public int Id { get; set; }
+        public ICollection<Teacher> Teacher { get; set; }
+    }
+
+	public class Teacher
+    {
+        public Teacher()
+        {
+            Pupils = new List<Pupil>();
+        }
+
+        public int Id { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+
+        public int SchoolNavId { get; set; } -- name of DB FK ultimately given here but guided by the SchoolNav and Id combo
+        public School SchoolNav { get; set; }
+
+        public ICollection<Pupil> Pupils { get; set; }
+    }
+
+Alternatively for complete control, ForeignKey attribute is used to marked the entity navigation property. You can then name the DB FK what you like "SchoolNavProp"
+
+	public class School
+    {
+        public School()
+        {
+            Teacher = new List<Teacher>();
+        }
+
+        public int Id { get; set; }
+        public ICollection<Teacher> Teacher { get; set; }
+    }
+
+	public class Teacher
+    {
+        public Teacher()
+        {
+            Pupils = new List<Pupil>();
+        }
+
+        public int Id { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+
+        [ForeignKey("School")]
+        public int SchoolNavProp { get; set; } -- can name this what you like because the FroeignKey attribute is marking the navigation property for you
+        public School School { get; set; }
+
+        public ICollection<Pupil> Pupils { get; set; }
+    }
+
+virtual keyword enables lazy loading on the property
